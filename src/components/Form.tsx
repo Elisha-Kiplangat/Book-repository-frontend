@@ -1,13 +1,15 @@
-import React, { useEffect, useRef } from 'react';
+import { useRef, useEffect } from 'react'; 
+import axios from 'axios';
 import './Form.scss';
+import { Book } from './BookReducer';
 
 interface FormProps {
-  dispatch: React.Dispatch<any>;
-  bookToEdit?: { id: number; title: string; author: string; year: string } | null;
-  setBookToEdit: React.Dispatch<React.SetStateAction<{ id: number; title: string; author: string; year: string } | null>>;
+  dispatch: any; 
+  bookToEdit?: Book | null;
+  setBookToEdit: (value: any) => void;
 }
 
-const Form: React.FC<FormProps> = ({ dispatch, bookToEdit, setBookToEdit }) => {
+const Form = ({ dispatch, bookToEdit, setBookToEdit }: FormProps) => {
   const titleRef = useRef<HTMLInputElement>(null);
   const authorRef = useRef<HTMLInputElement>(null);
   const yearRef = useRef<HTMLInputElement>(null);
@@ -20,38 +22,29 @@ const Form: React.FC<FormProps> = ({ dispatch, bookToEdit, setBookToEdit }) => {
     }
   }, [bookToEdit]);
 
-  const handleSubmit = (e: any) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (titleRef.current && authorRef.current && yearRef.current) {
-      const title = titleRef.current.value;
-      const author = authorRef.current.value;
-      const year = yearRef.current.value;
+    const title = titleRef.current?.value;
+    const author = authorRef.current?.value;
+    const year = yearRef.current?.value;
 
-      if (title && author && year) {
+    if (title && author && year) {
+      const newBook = { title, author, year };
+
+      try {
         if (bookToEdit) {
-          dispatch({
-            type: 'EDIT_BOOK',
-            payload: {
-              id: bookToEdit.id,
-              title,
-              author,
-              year,
-            },
-          });
-          setBookToEdit(null);  // Clear edit mode
+          const response = await axios.put(`http://localhost:8000/books/${bookToEdit.id}`, newBook);
+          dispatch({ type: 'EDIT_BOOK', payload: response.data });
+          setBookToEdit(null); // Clear edit mode
         } else {
-          dispatch({
-            type: 'ADD_BOOK',
-            payload: {
-              title,
-              author,
-              year,
-            },
-          });
+          const response = await axios.post('http://localhost:8000/books', newBook);
+          dispatch({ type: 'ADD_BOOK', payload: response.data });
         }
-        titleRef.current.value = '';
-        authorRef.current.value = '';
-        yearRef.current.value = '';
+        if (titleRef.current) titleRef.current.value = '';
+        if (authorRef.current) authorRef.current.value = '';
+        if (yearRef.current) yearRef.current.value = '';
+      } catch (error) {
+        console.error('Failed to submit book', error);
       }
     }
   };

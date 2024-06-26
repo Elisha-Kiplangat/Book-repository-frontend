@@ -1,22 +1,28 @@
-import React, { useState } from 'react';
+import { useState } from 'react'; 
+import axios from 'axios';
 import './BookList.scss';
 import { Book } from './BookReducer';
 import Form from './Form';
 
 interface BookListProps {
   books: Book[];
-  dispatch: React.Dispatch<any>;
+  dispatch: any;
 }
 
-const BookList: React.FC<BookListProps> = ({ books, dispatch }) => {
+const BookList = ({ books, dispatch }: BookListProps) => {
   const [bookToEdit, setBookToEdit] = useState<Book | null>(null);
 
   const handleEdit = (book: Book) => {
     setBookToEdit(book);
   };
 
-  const handleDelete = (id: number) => {
-    dispatch({ type: 'DELETE_BOOK', payload: id });
+  const handleDelete = async (id: number) => {
+    try {
+      await axios.delete(`http://localhost:8000/books/${id}`);
+      dispatch({ type: 'DELETE_BOOK', payload: id });
+    } catch (error) {
+      console.error('Failed to delete book', error);
+    }
   };
 
   return (
