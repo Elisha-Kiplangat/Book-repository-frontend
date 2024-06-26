@@ -33,11 +33,11 @@ const Form = ({ dispatch, bookToEdit, setBookToEdit }: FormProps) => {
 
       try {
         if (bookToEdit) {
-          const response = await axios.put(`http://localhost:8000/books/${bookToEdit.id}`, newBook);
+          const response = await axios.put(`https://book-repository-api-64t5.onrender.com/books/${bookToEdit.id}`, newBook);
           dispatch({ type: 'EDIT_BOOK', payload: response.data });
           setBookToEdit(null); // Clear edit mode
         } else {
-          const response = await axios.post('http://localhost:8000/books', newBook);
+          const response = await axios.post('https://book-repository-api-64t5.onrender.com/books', newBook);
           dispatch({ type: 'ADD_BOOK', payload: response.data });
         }
         if (titleRef.current) titleRef.current.value = '';

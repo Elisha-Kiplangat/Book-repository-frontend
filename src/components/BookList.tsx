@@ -18,7 +18,7 @@ const BookList = ({ books, dispatch }: BookListProps) => {
 
   const handleDelete = async (id: number) => {
     try {
-      await axios.delete(`http://localhost:8000/books/${id}`);
+      await axios.delete(`https://book-repository-api-64t5.onrender.com/books/${id}`);
       dispatch({ type: 'DELETE_BOOK', payload: id });
     } catch (error) {
       console.error('Failed to delete book', error);
