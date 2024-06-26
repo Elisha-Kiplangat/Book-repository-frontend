@@ -1,49 +1,69 @@
+form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
 
-    form {
-        display: flex;
-        flex-direction: row;
-        justify-content: space-evenly;
-        
+    h2 {
+        margin-bottom: 1rem;
+        color: rgb(255, 255, 255);
+        text-align: center;
+    }
 
-        h2 {
-            margin-bottom: 1rem;
-            color: rgb(255, 255, 255);
+    label {
+        color: rgb(80, 78, 78);
+        font-weight: bold;
+        text-align: left;
+        width: 100%;
+    }
+
+    input {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 0.5rem;
+        font-size: 1rem;
+        border: 1px solid gray;
+        border-radius: 0.25rem;
+
+        &:focus {
+            border-color: 1px solid gray;
+            outline: none;
+            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
         }
+    }
+
+    button {
+        width: 100%;
+        padding: 10px;
+        font-size: 1rem;
+        color: #fff;
+        background-color: gray;
+        border: none;
+        border-radius: 0.25rem;
+        cursor: pointer;
+        transition: background-color 0.3s;
+
+        &:hover {
+            background-color: #0056b3;
+        }
+    }
+
+    @media screen and (min-width: 600px) {
+        flex-direction: row;
+        justify-content: space-between;
 
         label {
-            margin-top: 0.5rem;
-            margin-bottom: 0.25rem;
-            color: rgb(255, 255, 255);
-            font-weight: bold;
-            justify-content: left;
+            width: 30%;
+            text-align: right;
+            margin-bottom: 0;
         }
 
         input {
-            padding: 10px;
-            margin-bottom: 0.5rem;
-            font-size: 1rem;
-            border: 1px solid gray;
-            border-radius: 0.25rem;
-
-            &:focus {
-                border-color: 1px solid gray;
-                outline: none;
-                box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
-            }
+            width: 60%;
         }
 
         button {
-            padding: 10px;
-            font-size: 1rem;
-            color: #fff;
-            background-color: gray;
-            border: none;
-            border-radius: 0.25rem;
-            cursor: pointer;
-            transition: background-color 0.3s;
-
-            &:hover {
-                background-color: #0056b3;
-            }
+            width: 30%;
         }
     }
+}

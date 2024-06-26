@@ -1,4 +1,3 @@
-// BookList.scss
 .book-list-container {
   margin: 20px;
   padding: 20px;
@@ -39,6 +38,25 @@
 
     td {
       color: #555;
+    }
+  }
+
+  @media screen and (max-width: 375px) {
+    padding: 10px;
+    margin: 10px;
+
+    h2 {
+      font-size: 1.2rem;
+      margin-bottom: 10px;
+    }
+
+    .book-table {
+      font-size: 0.9rem;
+
+      th,
+      td {
+        padding: 8px;
+      }
     }
   }
 }
