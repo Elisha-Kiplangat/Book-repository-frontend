@@ -4,7 +4,7 @@ import './App.scss';
 import BookList from './components/BookList';
 import BookReducer, { initialState } from './components/BookReducer';
 
-export const refreshContext = createContext({ refresh: false, setRefresh: (refresh: boolean) => {} });
+export const refreshContext = createContext({ refresh: false, setRefresh: (_refresh: boolean) => {} });
 
 const App = () => {
   const [state, dispatch] = useReducer(BookReducer, initialState);
@@ -12,7 +12,7 @@ const App = () => {
 
   useEffect(() => {
     fetchBooks();
-  }, [refresh]); // Fetch books when refresh changes
+  }, [refresh]); 
 
   const fetchBooks = async () => {
     try {
