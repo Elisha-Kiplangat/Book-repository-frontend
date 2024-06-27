@@ -2,7 +2,7 @@ export interface Book {
   id: number;
   title: string;
   author: string;
-  year: string;
+  publication_year: string;
 }
 
 export interface State {
@@ -32,7 +32,7 @@ const BookReducer = (state: State, action: Action): State => {
         ...state,
         books: state.books.map((book) =>
           book.id === action.payload.id
-            ? { ...book, title: action.payload.title, author: action.payload.author, year: action.payload.year }
+            ? { ...book, title: action.payload.title, author: action.payload.author, publication_year: action.payload.publication_year }
             : book
         ),
       };

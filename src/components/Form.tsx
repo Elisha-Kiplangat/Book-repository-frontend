@@ -10,6 +10,9 @@ interface FormProps {
 }
 
 const Form = ({ dispatch, bookToEdit, setBookToEdit }: FormProps) => {
+
+
+  
   const titleRef = useRef<HTMLInputElement>(null);
   const authorRef = useRef<HTMLInputElement>(null);
   const yearRef = useRef<HTMLInputElement>(null);
@@ -18,27 +21,37 @@ const Form = ({ dispatch, bookToEdit, setBookToEdit }: FormProps) => {
     if (bookToEdit) {
       if (titleRef.current) titleRef.current.value = bookToEdit.title;
       if (authorRef.current) authorRef.current.value = bookToEdit.author;
-      if (yearRef.current) yearRef.current.value = bookToEdit.year;
+      if (yearRef.current) yearRef.current.value = bookToEdit.publication_year;
     }
   }, [bookToEdit]);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: any) => {
     e.preventDefault();
     const title = titleRef.current?.value;
     const author = authorRef.current?.value;
-    const year = yearRef.current?.value;
+    const publication_year = Number(yearRef.current?.value);
 
-    if (title && author && year) {
-      const newBook = { title, author, year };
+    if (title && author && publication_year) {
+      const newBook = { title, author, publication_year };
 
       try {
         if (bookToEdit) {
-          const response = await axios.put(`https://book-repository-api-64t5.onrender.com/books/${bookToEdit.id}`, newBook);
+          const response = await axios.put(`http://localhost:8000/books/${bookToEdit.id}`, newBook);
           dispatch({ type: 'EDIT_BOOK', payload: response.data });
-          setBookToEdit(null); // Clear edit mode
+          setBookToEdit(''); 
+          console.log(response)
         } else {
-          const response = await axios.post('https://book-repository-api-64t5.onrender.com/books', newBook);
+          const response = await axios.post('http://localhost:8000/books', newBook, 
+            {
+              headers: {
+                'Content-Type': 'application/json'
+              }
+            }
+          );
+          
           dispatch({ type: 'ADD_BOOK', payload: response.data });
+          setBookToEdit('')
+          console.log(response)
         }
         if (titleRef.current) titleRef.current.value = '';
         if (authorRef.current) authorRef.current.value = '';
@@ -69,10 +82,10 @@ const Form = ({ dispatch, bookToEdit, setBookToEdit }: FormProps) => {
           ref={authorRef}
           required
         />
-        <label htmlFor="year">Year:</label>
+        <label htmlFor="publication_year">Year:</label>
         <input
-          type="text"
-          id="year"
+          type="number"
+          id="publication_year"
           placeholder="Year"
           ref={yearRef}
           required

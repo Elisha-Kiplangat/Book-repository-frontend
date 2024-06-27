@@ -18,7 +18,7 @@ const BookList = ({ books, dispatch }: BookListProps) => {
 
   const handleDelete = async (id: number) => {
     try {
-      await axios.delete(`https://book-repository-api-64t5.onrender.com/books/${id}`);
+      await axios.delete(`http://localhost:8000/books/${id}`);
       dispatch({ type: 'DELETE_BOOK', payload: id });
     } catch (error) {
       console.error('Failed to delete book', error);
@@ -44,7 +44,7 @@ const BookList = ({ books, dispatch }: BookListProps) => {
               <tr key={book.id}>
                 <td>{book.title}</td>
                 <td>{book.author}</td>
-                <td>{book.year}</td>
+                <td>{book.publication_year}</td>
                 <td>
                   <button onClick={() => handleEdit(book)}>Edit</button>
                   <button onClick={() => handleDelete(book.id)}>Delete</button>

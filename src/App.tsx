@@ -1,4 +1,4 @@
-import { useReducer, useEffect } from 'react';
+import { useReducer, useEffect, useState } from 'react';
 import axios from 'axios';
 import './App.scss';
 import BookList from './components/BookList';
@@ -6,6 +6,7 @@ import BookReducer, { initialState } from './components/BookReducer';
 
 const App = () => {
   const [state, dispatch] = useReducer(BookReducer, initialState);
+  // const [refresh, setRefresh] = useState<boolean>(false)
 
   useEffect(() => {
     fetchBooks();
@@ -13,7 +14,7 @@ const App = () => {
 
   const fetchBooks = async () => {
     try {
-      const response = await axios.get('https://book-repository-api-64t5.onrender.com/books');
+      const response = await axios.get('http://localhost:8000/books');
       dispatch({ type: 'SET_BOOKS', payload: response.data });
     } catch (error) {
       console.error('Failed to fetch books', error);
