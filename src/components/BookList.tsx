@@ -1,8 +1,9 @@
-import { useState } from 'react'; 
+import { useState, useContext } from 'react';
 import axios from 'axios';
 import './BookList.scss';
 import { Book } from './BookReducer';
 import Form from './Form';
+import { refreshContext } from '../App';
 
 interface BookListProps {
   books: Book[];
@@ -11,6 +12,7 @@ interface BookListProps {
 
 const BookList = ({ books, dispatch }: BookListProps) => {
   const [bookToEdit, setBookToEdit] = useState<Book | null>(null);
+  const { refresh, setRefresh } = useContext(refreshContext);
 
   const handleEdit = (book: Book) => {
     setBookToEdit(book);
@@ -18,7 +20,10 @@ const BookList = ({ books, dispatch }: BookListProps) => {
 
   const handleDelete = async (id: number) => {
     try {
-      await axios.delete(`http://localhost:8000/books/${id}`);
+      const response = await axios.delete(`https://book-repository-api-64t5.onrender.com/books/${id}`);
+      if (response.status === 200) {
+        setRefresh(!refresh);
+      }
       dispatch({ type: 'DELETE_BOOK', payload: id });
     } catch (error) {
       console.error('Failed to delete book', error);

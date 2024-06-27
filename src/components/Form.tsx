@@ -1,18 +1,18 @@
-import { useRef, useEffect } from 'react'; 
+import { useRef, useEffect, useContext } from 'react';
 import axios from 'axios';
 import './Form.scss';
 import { Book } from './BookReducer';
+import { refreshContext } from '../App';
 
 interface FormProps {
-  dispatch: any; 
+  dispatch: any;
   bookToEdit?: Book | null;
   setBookToEdit: (value: any) => void;
 }
 
 const Form = ({ dispatch, bookToEdit, setBookToEdit }: FormProps) => {
+  const { refresh, setRefresh } = useContext(refreshContext);
 
-
-  
   const titleRef = useRef<HTMLInputElement>(null);
   const authorRef = useRef<HTMLInputElement>(null);
   const yearRef = useRef<HTMLInputElement>(null);
@@ -36,22 +36,23 @@ const Form = ({ dispatch, bookToEdit, setBookToEdit }: FormProps) => {
 
       try {
         if (bookToEdit) {
-          const response = await axios.put(`http://localhost:8000/books/${bookToEdit.id}`, newBook);
+          const response = await axios.put(`https://book-repository-api-64t5.onrender.com/books/${bookToEdit.id}`, newBook);
           dispatch({ type: 'EDIT_BOOK', payload: response.data });
-          setBookToEdit(''); 
-          console.log(response)
+          setBookToEdit(null);
+          if (response.status === 200) {
+            setRefresh(!refresh);
+          }
         } else {
-          const response = await axios.post('http://localhost:8000/books', newBook, 
-            {
-              headers: {
-                'Content-Type': 'application/json'
-              }
-            }
-          );
-          
+          const response = await axios.post('https://book-repository-api-64t5.onrender.com/books', newBook, {
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          });
+          if (response.status === 200) {
+            setRefresh(!refresh);
+          }
           dispatch({ type: 'ADD_BOOK', payload: response.data });
-          setBookToEdit('')
-          console.log(response)
+          setBookToEdit(null);
         }
         if (titleRef.current) titleRef.current.value = '';
         if (authorRef.current) authorRef.current.value = '';
@@ -67,29 +68,11 @@ const Form = ({ dispatch, bookToEdit, setBookToEdit }: FormProps) => {
       <h2>{bookToEdit ? 'Edit Book' : 'Add Book'}</h2>
       <form onSubmit={handleSubmit}>
         <label htmlFor="title">Title:</label>
-        <input
-          type="text"
-          id="title"
-          placeholder="Title"
-          ref={titleRef}
-          required
-        />
+        <input type="text" id="title" placeholder="Title" ref={titleRef} required />
         <label htmlFor="author">Author:</label>
-        <input
-          type="text"
-          id="author"
-          placeholder="Author"
-          ref={authorRef}
-          required
-        />
+        <input type="text" id="author" placeholder="Author" ref={authorRef} required />
         <label htmlFor="publication_year">Year:</label>
-        <input
-          type="number"
-          id="publication_year"
-          placeholder="Year"
-          ref={yearRef}
-          required
-        />
+        <input type="number" id="publication_year" placeholder="Year" ref={yearRef} required />
         <button type="submit">{bookToEdit ? 'Update Book' : 'Add Book'}</button>
       </form>
     </div>
