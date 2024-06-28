@@ -12,6 +12,8 @@ interface BookListProps {
 
 const BookList = ({ books, dispatch }: BookListProps) => {
   const [bookToEdit, setBookToEdit] = useState<Book | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const booksPerPage = 5;
   const { refresh, setRefresh } = useContext(refreshContext);
 
   const handleEdit = (book: Book) => {
@@ -30,6 +32,22 @@ const BookList = ({ books, dispatch }: BookListProps) => {
     }
   };
 
+  const indexOfLastBook = currentPage * booksPerPage;
+  const indexOfFirstBook = indexOfLastBook - booksPerPage;
+  const currentBooks = books.slice(indexOfFirstBook, indexOfLastBook);
+
+  const handleNextPage = () => {
+    if (currentPage < Math.ceil(books.length / booksPerPage)) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
+
+  const handlePrevPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
+
   return (
     <div className="book-list-container">
       <Form dispatch={dispatch} bookToEdit={bookToEdit} setBookToEdit={setBookToEdit} />
@@ -45,7 +63,7 @@ const BookList = ({ books, dispatch }: BookListProps) => {
             </tr>
           </thead>
           <tbody>
-            {books.map((book) => (
+            {currentBooks.map((book) => (
               <tr key={book.id}>
                 <td>{book.title}</td>
                 <td>{book.author}</td>
@@ -58,6 +76,14 @@ const BookList = ({ books, dispatch }: BookListProps) => {
             ))}
           </tbody>
         </table>
+        <div className="control">
+          <button onClick={handlePrevPage} disabled={currentPage === 1}>
+            Prev
+          </button>
+          <button onClick={handleNextPage} disabled={currentPage === Math.ceil(books.length / booksPerPage)}>
+            Next
+          </button>
+        </div>
       </div>
     </div>
   );
